@@ -5,5 +5,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	_, err = linkMG()
+	if err != nil {
+		panic(err)
+	}
 
 }
