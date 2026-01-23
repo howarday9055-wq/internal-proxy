@@ -51,6 +51,28 @@ func linkMXG() (*ssh.Client, error) {
 	return sshClient, nil
 }
 
+func linkSS() (*ssh.Client, error) {
+	log.Printf("开始建立到数数服务器连接")
+	signer, errParse := ssh.ParsePrivateKey([]byte(SSKey))
+	if errParse != nil {
+		log.Printf("解析私钥失败: %v", errParse)
+		return nil, errParse
+	}
+	hostPort := fmt.Sprintf("%s:22", SSHost)
+	sshClient, errConn := ssh.Dial("tcp", hostPort, &ssh.ClientConfig{
+		User:            SSUser,
+		Auth:            []ssh.AuthMethod{ssh.PublicKeys(signer)},
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+		Timeout:         5 * time.Second,
+	})
+	if errConn != nil {
+		log.Printf("建立到数数服务器连接失败: %v", errConn)
+		return nil, errConn
+	}
+	log.Printf("完成建立到数数服务器连接")
+	return sshClient, nil
+}
+
 //func linkMGByProxy(client *ssh.Client) (*ssh.Client, error) {
 //	log.Printf("开始建立到美国服务器连接")
 //	hostPort := fmt.Sprintf("%s:22", MGHost)
