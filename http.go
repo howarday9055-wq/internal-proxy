@@ -20,7 +20,7 @@ func (p *httpProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p *httpProxy) handleHTTPS(w http.ResponseWriter, r *http.Request) {
-	log.Printf("HTTPS --> %s", r.Host)
+	log.Printf("HTTPS --> %s %s", r.Method, r.Host)
 	destConn, err := p.sshClient.Dial("tcp", r.Host)
 	if err != nil {
 		http.Error(w, "无法通过 SSH 连接目标: "+err.Error(), http.StatusServiceUnavailable)
@@ -45,7 +45,7 @@ func (p *httpProxy) handleHTTPS(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p *httpProxy) handleHTTP(w http.ResponseWriter, r *http.Request) {
-	log.Printf("HTTPS --> %s %s", r.Method, r.URL.String())
+	log.Printf("HTTP --> %s %s", r.Method, r.URL.String())
 
 	transport := &http.Transport{
 		DialContext: p.sshClient.DialContext,

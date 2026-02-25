@@ -1,39 +1,56 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"golang.org/x/crypto/ssh"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
+	"strings"
+
+	"golang.org/x/crypto/ssh"
 )
 
 func main() {
-	//if len(os.Args) < 3 || os.Args[1] == "" {
-	//	log.Printf("请输入目标网络环境(xg/mxg) 和端口号")
-	//}
-	//
-	//port, errParse := strconv.Atoi(os.Args[2])
-	//if errParse != nil {
-	//	log.Printf("端口号格式错误")
-	//	return
-	//}
-	localPort := fmt.Sprintf("127.0.0.1:%d", 8091)
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print("请输入目标网络环境(hk/mexico/ss，默认 hk): ")
+	envInput, _ := reader.ReadString('\n')
+	env := strings.TrimSpace(envInput)
+	if env == "" {
+		env = "hk"
+	}
+
+	fmt.Print("请输入本地监听端口(默认 8085): ")
+	portInput, _ := reader.ReadString('\n')
+	portStr := strings.TrimSpace(portInput)
+	if portStr == "" {
+		portStr = "8085"
+	}
+
+	port, errParse := strconv.Atoi(portStr)
+	if errParse != nil {
+		log.Printf("端口号格式错误: %v", errParse)
+		return
+	}
+	localPort := fmt.Sprintf("127.0.0.1:%d", port)
+
 	var (
 		sshClient *ssh.Client
 		err       error
 	)
-	//switch os.Args[1] {
-	//case "xg":
-	//	sshClient, err = linkXG()
-	//case "mxg":
-	//	sshClient, err = linkMXG()
-	//case "ss":
-	//	sshClient, err = linkSS()
-	//default:
-	//	log.Printf("请输入正确目标网络环境 （xg/mxg）")
-	//	return
-	//}
-	sshClient, err = linkSS()
+	switch env {
+	case "hk":
+		sshClient, err = linkHongKong()
+	case "mexico":
+		sshClient, err = linkMexico()
+	case "ss":
+		sshClient, err = linkSS()
+	default:
+		log.Printf("请输入正确目标网络环境(hk/mexico/ss)")
+		return
+	}
 	proxy := &httpProxy{sshClient: sshClient}
 	server := &http.Server{Addr: localPort, Handler: proxy}
 	log.Printf("HTTP 代理已启动，监听端口 %s", localPort)
