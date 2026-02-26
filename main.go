@@ -15,7 +15,7 @@ import (
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Print("请输入目标网络环境(hk/mexico/ss，默认 hk): ")
+	fmt.Print("请输入目标网络环境(hk/mexico/ss, 默认 hk): ")
 	envInput, _ := reader.ReadString('\n')
 	env := strings.TrimSpace(envInput)
 	if env == "" {

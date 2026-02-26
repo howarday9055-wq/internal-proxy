@@ -33,7 +33,7 @@ func linkBase(desc, host, user, key string) (*ssh.Client, error) {
 }
 
 func linkHongKong() (*ssh.Client, error) {
-	return linkBase("香港", XGHost, XGUser, XGKey)
+	return linkBase("香港", HKHost, HKUser, HKKey)
 }
 
 func linkMexico() (*ssh.Client, error) {
