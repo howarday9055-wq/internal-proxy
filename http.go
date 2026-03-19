@@ -35,7 +35,7 @@ func (p *httpProxy) handleHTTPS(w http.ResponseWriter, r *http.Request) {
 	}
 	clientConn, _, errHijack := hijacker.Hijack()
 	if errHijack != nil {
-		http.Error(w, err.Error(), http.StatusServiceUnavailable)
+		http.Error(w, errHijack.Error(), http.StatusServiceUnavailable)
 		return
 	}
 	defer func() { _ = clientConn.Close() }()
