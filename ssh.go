@@ -39,3 +39,7 @@ func linkHongKong() (*ssh.Client, error) {
 func linkMexico() (*ssh.Client, error) {
 	return linkBase("墨西哥", MXGHost, MXGUser, MXGKey)
 }
+
+func linkNewHongKong() (*ssh.Client, error) {
+	return linkBase("新香港", NHKHost, NHKUser, NHKKey)
+}
