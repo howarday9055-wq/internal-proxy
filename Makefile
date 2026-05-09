@@ -1,5 +1,5 @@
 # default version
-VERSION ?= v1.0.0
+VERSION ?= v1.0.8
 
 # binaries
 BIN_DARWIN_AMD64 = internal-proxy-darwin-amd64-${VERSION}

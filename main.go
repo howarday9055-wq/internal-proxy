@@ -15,7 +15,7 @@ import (
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Print("请输入目标网络环境(hk/mx/nhk, 默认 hk): ")
+	fmt.Print("请输入目标网络环境(hk/mx/us/nhk, 默认 hk): ")
 	envInput, _ := reader.ReadString('\n')
 	env := strings.TrimSpace(envInput)
 	if env == "" {
@@ -47,8 +47,10 @@ func main() {
 		sshClient, err = linkMexico()
 	case "nhk":
 		sshClient, err = linkNewHongKong()
+	case "us":
+		sshClient, err = linkVirginia()
 	default:
-		log.Printf("请输入正确目标网络环境(hk/mx/nhk)")
+		log.Printf("请输入正确目标网络环境(hk/mx/us/nhk)")
 		return
 	}
 	proxy := &httpProxy{sshClient: sshClient}
